@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.7
+
 """
 Preprocess given file assuming it is in Eva format.
 See: http://www.voynich.nu/transcr.html

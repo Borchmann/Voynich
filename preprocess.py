@@ -112,7 +112,7 @@ def preprocess(filename):
     """
     Preprocess given filename assuming it is in Eva alphabet.
     """
-    with open(filename) as ins:
+    with open(filename, encoding='utf-8', errors='ignore') as ins:
         # Extract text (strip locus indicators)
         text = []
         for line in ins:

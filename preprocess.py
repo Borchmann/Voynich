@@ -43,16 +43,20 @@ def unigrams(word):
     return ['<W>'] + list(word) + ['</W>']
 
 
+def ngramize(w, order):
+    """
+    Produce n-grams up to given order.
+    """
+    l = []
+    for o in range(1, order + 1):
+        l.extend(ngrams(w, o))
+    return l
+
+
 def build_word_model(corpus, order=3):
     """
     Creates character-level n-gram word model.
     """
-
-    def ngramize(w, order):
-        l = []
-        for o in range(1, order + 1):
-            l.extend(ngrams(w, o))
-        return l
 
     words = ' '.join(corpus).split()  # Flatten corpus into words
     words = [w for w in words if re.match(r'[a-z]', w)]  # Use clean words only
@@ -78,10 +82,14 @@ def solve_uncertain_reading(text, model):
     on the basis of character-level word model.
     """
 
+    def string_perplexity(w):
+        word_ngrams = ngramize(unigrams(w), model.order)
+        return model.perplexity(word_ngrams)
+
     def solve(alternative):
         prefix, options, suffix = alternative.groups()
         options = options.split(':') if ':' in options else list(options)
-        options = sorted(options, key=lambda o: model.perplexity(prefix + o + suffix))
+        options = sorted(options, key=lambda o: string_perplexity(prefix + o + suffix))
         return prefix + options[0] + suffix
 
     return re.sub('(\w*)\[(.*?)\](\w*)', solve, text)

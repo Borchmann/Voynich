@@ -1,5 +1,5 @@
 # Landini-Stolfi and Zandbergen's transcriptions
-EVA_CORPORA = beta/LSI_ivtff_0d.txt ZL_ivtff_1z.txt
+EVA_CORPUS = beta/LSI_ivtff_0d.txt ZL_ivtff_1z.txt
 EMB_DIM?=10
 EMB_MODE?=skipgram
 EMB_EPOCH?=10000
@@ -31,10 +31,12 @@ HERBS_CORPUS = plantsstoriesof00alleuoft/plantsstoriesof00alleuoft_djvu \
 
 .PHONY: embeddings
 
+herbs: $(HERBS_CORPUS)
+
+voynich: $(EVA_CORPUS)
+
 clean:
 	rm -rf tmp corpora
-
-corpora: $(EVA_CORPORA)
 
 $(EVA_CORPORA):
 	mkdir -p tmp corpora
@@ -50,8 +52,6 @@ bin/fasttext:
 	cd fastText-0.9.1
 	make
 	mv fasttext ../bin/
-
-herbs: $(HERBS_CORPUS)
 
 $(HERBS_CORPUS):
 	wget -qO- "https://archive.org/stream/$@.txt" | \
@@ -71,3 +71,13 @@ embeddings: bin/fasttext
 	               -output embeddings/${EMB_CORPUS}_${EMB_MODE}_${EMB_DIM} \
 	               -dim ${EMB_DIM} \
 	               -epoch ${EMB_EPOCH}
+
+muse:
+	python thirdparty/MUSE/unsupervised.py --src_lang en \
+	                                       --tgt_lang vy \
+										   --src_emb embeddings/herbs_${EMB_MODE}_${EMB_DIM}.vec \
+										   --tgt_emb embeddings/voynich_${EMB_MODE}_${EMB_DIM}.vec \
+										   --emb_dim ${EMB_DIM} \
+										   --dis_most_frequent 3000 \
+										   --exp_path experiments/herbs_voynich_${EMB_MODE}_${EMB_DIM} \
+										   --n_refinement 5

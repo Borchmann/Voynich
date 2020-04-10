@@ -57,7 +57,12 @@ $(HERBS_CORPUS):
 	wget -qO- "https://archive.org/stream/$@.txt" | \
 	grep -Pzo '(?s)(?<=<pre>)(.*?)(?=</pre>)' | \
 	sed 's/([^-])$$/\0 /g; s/-\s*$$//' | \
-	tr '\n' ' ' | tr '[:upper:]' '[:lower:]' >> corpora/herbs.txt
+	tr '\n' ' ' | \
+	python -m syntok.segmenter | \
+	python -m syntok.tokenizer | \
+	tr '[:upper:]' '[:lower:]' | \
+	tr -d '[:punct:]' | \
+	ftfy >> corpora/herbs.txt
 
 embeddings: bin/fasttext
 	mkdir -p embeddings

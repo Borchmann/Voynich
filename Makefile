@@ -3,6 +3,7 @@ EMB_MODE?=skipgram
 EMB_EPOCH?=10000
 EMB_CORPUS?=voynich
 EMB_NORMALIZE?=""
+MAP_OPTIMIZER?="sgd,lr=0.1"
 
 include mk/*.mk
 
@@ -31,15 +32,18 @@ embeddings: bin/fasttext
 	               -epoch ${EMB_EPOCH}
 
 muse:
-	python thirdparty/MUSE/unsupervised.py --src_lang en \
-	                                       --tgt_lang vy \
-	                                       --src_emb embeddings/herbs_${EMB_MODE}_${EMB_DIM}.vec \
-	                                       --tgt_emb embeddings/voynich_${EMB_MODE}_${EMB_DIM}.vec \
-	                                       --emb_dim ${EMB_DIM} \
-	                                       --dis_most_frequent 3000 \
-	                                       --exp_path experiments \
-	                                       --exp_name herbs_voynich_${EMB_MODE}_${EMB_DIM} \
-	                                       --n_refinement 100 \
-	                                       --n_epochs 10 \
-	                                       --batch_size 32 \
-	                                       --normalize_embeddings ${EMB_NORMALIZE}
+	PYTHONPATH=thirdparty/MUSE/ python muse.py --src_lang en \
+	                                           --tgt_lang vy \
+	                                           --src_emb embeddings/herbs_${EMB_MODE}_${EMB_DIM}.vec \
+	                                           --tgt_emb embeddings/voynich_${EMB_MODE}_${EMB_DIM}.vec \
+	                                           --emb_dim ${EMB_DIM} \
+	                                           --dis_most_frequent 3000 \
+	                                           --exp_path experiments \
+	                                           --exp_name herbs_voynich_${EMB_MODE}_${EMB_DIM} \
+	                                           --n_refinement 100 \
+	                                           --n_epochs 10 \
+	                                           --batch_size 32 \
+	                                           --normalize_embeddings ${EMB_NORMALIZE} \
+	                                           --map_optimizer ${MAP_OPTIMIZER} \
+	                                           --epoch_size 100000 \
+	                                           --max_vocab 3000

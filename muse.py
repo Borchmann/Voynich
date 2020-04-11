@@ -99,12 +99,26 @@ def all_eval(evaluator, to_log):
     evaluator.dist_mean_cosine(to_log)
 
 
+def dump_dico(trainer):
+    path = os.path.join(trainer.params.exp_path, 'dictionary.tsv')
+    logger.info('Saving dictionary to %s...', path)
+    last_dico = trainer.dico
+    with open(path, 'w') as out:
+        for idx, pair in enumerate(last_dico.split(1, dim=0)):
+            src_id, tgt_id = pair[0].tolist()
+            src_word = trainer.src_dico.id2word[src_id]
+            tgt_word = trainer.tgt_dico.id2word[tgt_id]
+            entry = f'{src_word}\t{tgt_word}'
+            if idx < 10:
+                logger.info(entry)
+            out.write(f'{entry}\n')           
+
+
 # build model / trainer / evaluator
 logger = initialize_exp(params)
 src_emb, tgt_emb, mapping, discriminator = build_model(params, True)
 trainer = Trainer(src_emb, tgt_emb, mapping, discriminator, params)
 evaluator = Evaluator(trainer)
-
 
 """
 Learning loop for Adversarial Training
@@ -130,7 +144,7 @@ if params.adversarial:
             n_words_proc += trainer.mapping_step(stats)
 
             # log stats
-            if n_iter % 500 == 0:
+            if n_iter % params.epoch_size / 2 == 0:
                 stats_str = [('DIS_COSTS', 'Discriminator loss')]
                 stats_log = ['%s: %.4f' % (v, np.mean(stats[k]))
                              for k, v in stats_str if len(stats[k]) > 0]
@@ -187,6 +201,9 @@ if params.n_refinement > 0:
         logger.info("__log__:%s" % json.dumps(to_log))
         trainer.save_best(to_log, VALIDATION_METRIC)
         logger.info('End of refinement iteration %i.\n\n' % n_iter)
+
+    # dump last dictionary
+    dump_dico(trainer)
 
 
 # export embeddings

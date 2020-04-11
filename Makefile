@@ -4,6 +4,7 @@ EMB_EPOCH?=10000
 EMB_CORPUS?=voynich
 EMB_NORMALIZE?=""
 MAP_OPTIMIZER?="sgd,lr=0.1"
+ADVERSARIAL?=True
 
 include mk/*.mk
 
@@ -37,13 +38,14 @@ muse:
 	                                           --src_emb embeddings/herbs_${EMB_MODE}_${EMB_DIM}.vec \
 	                                           --tgt_emb embeddings/voynich_${EMB_MODE}_${EMB_DIM}.vec \
 	                                           --emb_dim ${EMB_DIM} \
-	                                           --dis_most_frequent 3000 \
+	                                           --dis_most_frequent 3500 \
 	                                           --exp_path experiments \
 	                                           --exp_name herbs_voynich_${EMB_MODE}_${EMB_DIM} \
-	                                           --n_refinement 100 \
-	                                           --n_epochs 10 \
+	                                           --n_refinement 5 \
+	                                           --n_epochs 5 \
 	                                           --batch_size 32 \
 	                                           --normalize_embeddings ${EMB_NORMALIZE} \
 	                                           --map_optimizer ${MAP_OPTIMIZER} \
+	                                           --adversarial ${ADVERSARIAL} \
 	                                           --epoch_size 100000 \
-	                                           --max_vocab 3000
+	                                           --max_vocab 3500

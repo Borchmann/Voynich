@@ -102,7 +102,7 @@ def all_eval(evaluator, to_log):
 def dump_dico(trainer):
     path = os.path.join(trainer.params.exp_path, 'dictionary.tsv')
     logger.info('Saving dictionary to %s', path)
-    last_dico = trainer.dico
+    last_dico = trainer.dico[trainer.dico.argsort(dim=0)[:,0]]  # sort by src_id
     with open(path, 'w') as out:
         for idx, pair in enumerate(last_dico.split(1, dim=0)):
             src_id, tgt_id = pair[0].tolist()

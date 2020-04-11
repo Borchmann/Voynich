@@ -33,10 +33,10 @@ embeddings: bin/fasttext
 	               -epoch ${EMB_EPOCH}
 
 muse:
-	PYTHONPATH=thirdparty/MUSE/ python muse.py --src_lang en \
-	                                           --tgt_lang vy \
-	                                           --src_emb embeddings/herbs_${EMB_MODE}_${EMB_DIM}.vec \
-	                                           --tgt_emb embeddings/voynich_${EMB_MODE}_${EMB_DIM}.vec \
+	PYTHONPATH=thirdparty/MUSE/ python muse.py --tgt_lang en \
+	                                           --src_lang vy \
+	                                           --tgt_emb embeddings/herbs_${EMB_MODE}_${EMB_DIM}.vec \
+	                                           --src_emb embeddings/voynich_${EMB_MODE}_${EMB_DIM}.vec \
 	                                           --emb_dim ${EMB_DIM} \
 	                                           --dis_most_frequent 3500 \
 	                                           --exp_path experiments \

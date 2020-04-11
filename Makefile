@@ -39,7 +39,7 @@ muse:
 	                                       --dis_most_frequent 3000 \
 	                                       --exp_path experiments \
 	                                       --exp_name herbs_voynich_${EMB_MODE}_${EMB_DIM} \
-	                                        --n_refinement 100 \
+	                                       --n_refinement 100 \
 	                                       --n_epochs 10 \
 	                                       --batch_size 32 \
 	                                       --normalize_embeddings ${EMB_NORMALIZE}

@@ -2,6 +2,9 @@ EMB_DIM?=10
 EMB_MODE?=skipgram
 EMB_EPOCH?=10000
 EMB_CORPUS?=voynich
+EMB_THREAD?=12
+EMB_DICT_LIMIT?=20000
+
 EMB_NORMALIZE?=""
 MAP_OPTIMIZER?="sgd,lr=0.1"
 ADVERSARIAL?=True
@@ -23,14 +26,15 @@ bin/fasttext:
 	make
 	mv fasttext ../bin/
 
-
 embeddings: bin/fasttext
 	mkdir -p embeddings
 	./bin/fasttext ${EMB_MODE} \
 	               -input corpora/${EMB_CORPUS}.txt \
 	               -output embeddings/${EMB_CORPUS}_${EMB_MODE}_${EMB_DIM} \
 	               -dim ${EMB_DIM} \
+	               -thread ${EMB_THREAD} \
 	               -epoch ${EMB_EPOCH}
+	sed -i '${EMB_DICT_LIMIT},$ d' embeddings/${EMB_CORPUS}_${EMB_MODE}_${EMB_DIM}.vec
 
 muse:
 	PYTHONPATH=thirdparty/MUSE/ python muse.py --tgt_lang en \
@@ -48,4 +52,4 @@ muse:
 	                                           --map_optimizer ${MAP_OPTIMIZER} \
 	                                           --adversarial ${ADVERSARIAL} \
 	                                           --epoch_size 100000 \
-	                                           --max_vocab 10000
+	                                           --max_vocab ${EMB_DICT_LIMIT}

@@ -1,9 +1,7 @@
-# Landini-Stolfi and Zandbergen's transcriptions
-EVA_CORPUS = beta/LSI_ivtff_0d.txt ZL_ivtff_1z.txt
-
-$(EVA_CORPORA):
+# Zandbergen's transcriptions
+ZL_ivtff_1z.txt:
 	mkdir -p tmp corpora
 	wget "http://www.voynich.nu/data/$@" -O "tmp/$(notdir $@)"
 	./preprocess.py tmp/$(notdir $@) >> corpora/voynich.txt
 
-voynich: $(EVA_CORPUS)
+voynich: ZL_ivtff_1z.txt

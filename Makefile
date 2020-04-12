@@ -8,6 +8,8 @@ EMB_DICT_LIMIT?=20000
 EMB_NORMALIZE?=""
 MAP_OPTIMIZER?="sgd,lr=0.1"
 ADVERSARIAL?=True
+TGT_EMB?=herbs
+
 
 include mk/*.mk
 
@@ -39,12 +41,12 @@ embeddings: bin/fasttext
 muse:
 	PYTHONPATH=thirdparty/MUSE/ python muse.py --tgt_lang en \
 	                                           --src_lang vy \
-	                                           --tgt_emb embeddings/herbs_${EMB_MODE}_${EMB_DIM}.vec \
+	                                           --tgt_emb embeddings/${TGT_EMB}_${EMB_MODE}_${EMB_DIM}.vec \
 	                                           --src_emb embeddings/voynich_${EMB_MODE}_${EMB_DIM}.vec \
 	                                           --emb_dim ${EMB_DIM} \
 	                                           --dis_most_frequent 3410 \
 	                                           --exp_path experiments \
-	                                           --exp_name herbs_voynich_${EMB_MODE}_${EMB_DIM} \
+	                                           --exp_name ${TGT_EMB}_voynich_${EMB_MODE}_${EMB_DIM} \
 	                                           --n_refinement 5 \
 	                                           --n_epochs 5 \
 	                                           --batch_size 32 \

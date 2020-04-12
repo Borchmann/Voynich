@@ -124,10 +124,9 @@ def dump_translations(trainer, txt_dict):
         for idx, line in enumerate(inp):
             line = line.rstrip()
             translation = ' '.join([txt_dict[w] for w in line.split()])
-            outline = f'{translation}\t{line}'
             if idx < 10:
-                logger.info(outline)
-            out.write(translation)
+                logger.info(translation)
+            out.write(translation + '\n')
 
 
 # build model / trainer / evaluator

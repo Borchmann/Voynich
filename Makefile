@@ -34,7 +34,7 @@ embeddings: bin/fasttext
 	               -dim ${EMB_DIM} \
 	               -thread ${EMB_THREAD} \
 	               -epoch ${EMB_EPOCH}
-	sed -i '${EMB_DICT_LIMIT},$ d' embeddings/${EMB_CORPUS}_${EMB_MODE}_${EMB_DIM}.vec
+	sed -i '${EMB_DICT_LIMIT},$$ d' embeddings/${EMB_CORPUS}_${EMB_MODE}_${EMB_DIM}.vec
 
 muse:
 	PYTHONPATH=thirdparty/MUSE/ python muse.py --tgt_lang en \

@@ -6,7 +6,7 @@ import os
 import time
 import json
 import argparse
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 import numpy as np
 import torch
 
@@ -103,15 +103,31 @@ def dump_dico(trainer):
     path = os.path.join(trainer.params.exp_path, 'dictionary.tsv')
     logger.info('Saving dictionary to %s', path)
     last_dico = trainer.dico[trainer.dico.argsort(dim=0)[:,0]]  # sort by src_id
+    txt_dict = defaultdict(lambda: '<unk>')
     with open(path, 'w') as out:
         for idx, pair in enumerate(last_dico.split(1, dim=0)):
             src_id, tgt_id = pair[0].tolist()
             src_word = trainer.src_dico.id2word[src_id]
             tgt_word = trainer.tgt_dico.id2word[tgt_id]
+            txt_dict[src_word] = tgt_word
             entry = f'{src_word}\t{tgt_word}'
             if idx < 10:
                 logger.info(entry)
-            out.write(f'{entry}\n')           
+            out.write(f'{entry}\n')
+    dump_translations(trainer, txt_dict)    
+
+
+def dump_translations(trainer, txt_dict):
+    path = os.path.join(trainer.params.exp_path, 'translation.tsv')
+    logger.info('Saving translations to %s', path)
+    with open(path, 'w') as out, open('corpora/voynich.txt') as inp:
+        for idx, line in enumerate(inp):
+            line = line.rstrip()
+            translation = ' '.join([txt_dict[w] for w in line.split()])
+            outline = f'{translation}\t{line}'
+            if idx < 10:
+                logger.info(outline)
+            out.write(translation)
 
 
 # build model / trainer / evaluator

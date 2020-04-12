@@ -38,7 +38,7 @@ muse:
 	                                           --tgt_emb embeddings/herbs_${EMB_MODE}_${EMB_DIM}.vec \
 	                                           --src_emb embeddings/voynich_${EMB_MODE}_${EMB_DIM}.vec \
 	                                           --emb_dim ${EMB_DIM} \
-	                                           --dis_most_frequent 3500 \
+	                                           --dis_most_frequent 3410 \
 	                                           --exp_path experiments \
 	                                           --exp_name herbs_voynich_${EMB_MODE}_${EMB_DIM} \
 	                                           --n_refinement 5 \
@@ -48,4 +48,4 @@ muse:
 	                                           --map_optimizer ${MAP_OPTIMIZER} \
 	                                           --adversarial ${ADVERSARIAL} \
 	                                           --epoch_size 100000 \
-	                                           --max_vocab 3500
+	                                           --max_vocab 10000

@@ -12,6 +12,6 @@ corpora/wiki.txt: bin/wikiextractor tmp/wiki.xml.bz2
 	grep "^[^<]" wiki.txt | fgrep '.' | \
 	python -m syntok.segmenter | python -m syntok.tokenizer | \
 	tr '[:upper:]' '[:lower:]' | ftfy | tr '[:punct:]' ' ' | \
-	sed -E 's/[0-9]+/9/g; s/\s\s+/ /g' > 
+	sed -E 's/[0-9]+/9/g; s/\s\s+/ /g' > corpora/wiki.txt
 
 wiki: corpora/wiki.txt

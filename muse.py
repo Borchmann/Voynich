@@ -180,7 +180,8 @@ Learning loop for Procrustes Iterative Refinement
 if params.n_refinement > 0:
     # Get the best mapping according to VALIDATION_METRIC
     logger.info('----> ITERATIVE PROCRUSTES REFINEMENT <----\n\n')
-    trainer.reload_best()
+    if params.adversarial:
+        trainer.reload_best()
 
     # training loop
     for n_iter in range(params.n_refinement):

@@ -26,12 +26,12 @@ HERBS_CORPUS = plantsstoriesof00alleuoft/plantsstoriesof00alleuoft_djvu \
 $(HERBS_CORPUS):
 	wget -qO- "https://archive.org/stream/$@.txt" | \
 	grep -Pzo '(?s)(?<=<pre>)(.*?)(?=</pre>)' | \
-	sed 's/([^-])$$/\0 /g; s/-\s*$$//; s/[0-9]+/9/g' | \
+	sed -E 's/([^-])$$/\0 /g; s/-\s*$$//; s/[0-9]+/9/g' | \
 	tr '\n' ' ' | \
 	python -m syntok.segmenter | \
 	python -m syntok.tokenizer | \
 	tr '[:upper:]' '[:lower:]' | \
-	tr -d '[:punct:]' | \
+	tr '[:punct:]' ' ' | \
 	ftfy >> corpora/herbs.txt
 
 herbs: $(HERBS_CORPUS)

@@ -218,11 +218,9 @@ if params.n_refinement > 0:
         trainer.save_best(to_log, VALIDATION_METRIC)
         logger.info('End of refinement iteration %i.\n\n' % n_iter)
 
-    # dump last dictionary
-    dump_dico(trainer)
-
-
 # export embeddings
 if params.export:
     trainer.reload_best()
     trainer.export()
+    # dump last dictionary
+    dump_dico(trainer)
